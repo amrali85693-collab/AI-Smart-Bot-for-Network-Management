@@ -1,0 +1,42 @@
+# Secrets — never commit API keys
+.streamlit/secrets.toml
+streamlit.out.log
+streamlit.err.log
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+
+# SQLite
+*.db
+*.db-shm
+*.db-wal
+tmp_*.db
+
+# Test / tooling artifacts
+.pytest_cache/
+eval_err.txt
+.coverage
+htmlcov/
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Agent configuration
+.claude/
+.kiro/
+.qoder/
+
+# AutoClaw KDream data
+.autoclaw/

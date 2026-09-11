@@ -1,0 +1,242 @@
+[
+  {
+    "id": "osi-model",
+    "topic": "OSI Model",
+    "keywords": ["osi", "layers", "physical", "data link", "network", "transport", "session", "presentation", "application"],
+    "answer": "The OSI model divides network communication into seven layers, from Physical (Layer 1) to Application (Layer 7). Layers 1-4 handle delivery (bits, frames, packets, segments); layers 5-7 handle data representation and applications. When troubleshooting, identify which layer a symptom belongs to: link lights (L1), MAC/VLAN issues (L2), IP/routing (L3), ports/TCP (L4), app protocols (L7)."
+  },
+  {
+    "id": "tcp-ip",
+    "topic": "TCP/IP",
+    "keywords": ["tcp", "ip", "udp", "protocol", "internet", "stack"],
+    "answer": "TCP/IP is the practical internet protocol suite: IP for addressing and routing, TCP for reliable delivery, UDP for low-latency datagrams. Most admin work happens at IP (routing, ACLs), TCP/UDP (port checks), and application protocols above them. Use ping/traceroute for IP reachability and telnet/nc/curl for port and service checks."
+  },
+  {
+    "id": "subnetting",
+    "topic": "Subnetting",
+    "keywords": ["subnet", "cidr", "mask", "network address", "broadcast"],
+    "answer": "Subnetting splits an IP network into smaller segments using a subnet mask or CIDR prefix (e.g. /24). The network address, usable host range, and broadcast address depend on the mask. Wrong subnetting causes unreachable hosts or duplicate IPs. Verify with ipconfig/ifconfig, check the default gateway, and confirm the host is in the same VLAN/subnet as its gateway."
+  },
+  {
+    "id": "dns",
+    "topic": "DNS",
+    "keywords": ["dns", "domain name", "resolver", "lookup", "a record", "nslookup"],
+    "answer": "DNS translates hostnames to IP addresses. Failures often show as 'server not found' while IP-based access still works. Test with nslookup or dig against your configured resolver, try a public resolver (8.8.8.8), and check forward/reverse records. Common causes: wrong DNS server, stale cache, firewall blocking UDP/TCP 53, or expired domain records."
+  },
+  {
+    "id": "dhcp",
+    "topic": "DHCP",
+    "keywords": ["dhcp", "lease", "ip assignment", "scope", "reservation"],
+    "answer": "DHCP automatically assigns IP addresses, subnet masks, gateways, and DNS servers. If a host gets APIPA (169.254.x.x) or no address, the DHCP server may be unreachable, the scope exhausted, or a relay misconfigured. Check lease table on the server, verify helper-address on routers for remote subnets, and release/renew on the client."
+  },
+  {
+    "id": "vlan",
+    "topic": "VLAN",
+    "keywords": ["vlan", "802.1q", "trunk", "access port", "segmentation"],
+    "answer": "VLANs logically segment a switched network at Layer 2. Access ports carry one VLAN; trunk ports tag frames with 802.1Q. Misconfigured VLAN membership causes devices to be unreachable despite good link status. Verify port mode, native VLAN on trunks, and that the host's subnet matches the VLAN's gateway."
+  },
+  {
+    "id": "routing",
+    "topic": "Routing",
+    "keywords": ["routing", "router", "default gateway", "static route", "bgp", "ospf"],
+    "answer": "Routing forwards packets between IP subnets. Each host needs a correct default gateway; routers need routes to remote networks (static or dynamic). If ping works locally but not remotely, suspect missing routes, asymmetric routing, or ACL drops. Use traceroute to locate where packets stop and inspect routing tables on each hop."
+  },
+  {
+    "id": "switching",
+    "topic": "Switching",
+    "keywords": ["switch", "mac address", "cam table", "spanning tree", "stp"],
+    "answer": "Switches forward frames based on MAC addresses in the CAM table. Loops without STP cause broadcast storms; STP blocking can leave alternate paths unused. Check port status, speed/duplex, MAC learning, and STP state. For a single host issue, verify the MAC appears on the expected access port."
+  },
+  {
+    "id": "firewall",
+    "topic": "Firewalls",
+    "keywords": ["firewall", "acl", "stateful", "deny", "port block"],
+    "answer": "Firewalls filter traffic by IP, port, protocol, and state. Stateful firewalls track sessions and allow return traffic. If a service works internally but not across the firewall, check ACL order (first match wins), NAT rules, and whether the rule allows the correct direction. Log denied flows to identify blocked ports."
+  },
+  {
+    "id": "vpn",
+    "topic": "VPN",
+    "keywords": ["vpn", "ipsec", "ssl vpn", "tunnel", "remote access"],
+    "answer": "VPNs encrypt traffic over untrusted networks, linking remote users or sites. IPsec site-to-site and SSL client VPNs are common. Failures often involve mismatched phase 1/2 parameters, expired certificates, NAT traversal issues, or split-tunnel vs full-tunnel routing. Verify tunnel status, interesting traffic ACLs, and that remote clients receive correct routes/DNS."
+  },
+  {
+    "id": "snmp",
+    "topic": "SNMP",
+    "keywords": ["snmp", "oid", "community", "polling", "monitoring", "trap"],
+    "answer": "SNMP lets managers poll agents on devices for metrics (CPU, interfaces, errors) and receive traps on events. SNMPv2c uses community strings; SNMPv3 adds auth/privacy. If polling fails, check ACLs allowing UDP 161 from the manager, correct community/credentials, and that the device enables SNMP on the expected interfaces."
+  },
+  {
+    "id": "latency",
+    "topic": "Latency vs Bandwidth",
+    "keywords": ["latency", "bandwidth", "throughput", "delay", "rtt"],
+    "answer": "Latency is round-trip delay (ms); bandwidth is maximum data rate (Mbps/Gbps). High latency hurts interactive apps and VoIP; low bandwidth caps bulk transfers. They are independent—a high-bandwidth satellite link can still have high latency. Measure latency with ping; measure throughput with iperf or file transfer tests."
+  },
+  {
+    "id": "packet-loss",
+    "topic": "Packet Loss",
+    "keywords": ["packet loss", "drops", "crc", "congestion", "buffer"],
+    "answer": "Packet loss means frames or packets never reach the destination. Causes include congestion, duplex mismatches, bad cables, overloaded Wi-Fi, or ACL drops. Even 1-2% loss can degrade TCP heavily. Use sustained ping, check interface error counters (CRC, giants, runts), and inspect queue drops on routers during peak load."
+  },
+  {
+    "id": "ping-traceroute",
+    "topic": "Ping and Traceroute",
+    "keywords": ["ping", "traceroute", "tracert", "icmp", "path discovery"],
+    "answer": "Ping sends ICMP echo requests to test reachability and RTT. Traceroute maps the path hop-by-hop using TTL expiry or UDP probes. A failed ping may mean the host is down, ICMP blocked, or routing broken—not always total outage. Traceroute shows where the path stops; compare forward and reverse paths for asymmetry issues."
+  },
+  {
+    "id": "wifi",
+    "topic": "Wi-Fi Troubleshooting",
+    "keywords": ["wifi", "wireless", "ssid", "channel", "signal", "802.11"],
+    "answer": "Wi-Fi issues often stem from weak signal, channel overlap, authentication failures, or DHCP/DNS on the WLAN. Check RSSI/SNR, try a different channel or band (2.4 vs 5 GHz), confirm SSID/security settings, and verify the AP has uplink connectivity. Captive portals and client isolation can block peer-to-peer access."
+  },
+  {
+    "id": "security-threats",
+    "topic": "Network Security Threats",
+    "keywords": ["security", "ddos", "mitm", "malware", "intrusion", "phishing"],
+    "answer": "Common threats include DDoS floods, MITM on untrusted networks, malware lateral movement, and credential theft. Defenses: segmentation, least-privilege ACLs, IDS/IPS, patched firmware, and MFA for admin access. Monitor for unusual traffic spikes, new MACs on sensitive VLANs, and failed auth attempts on VPN and management interfaces."
+  },
+  {
+    "id": "troubleshooting-checklist",
+    "topic": "Troubleshooting Checklist",
+    "keywords": ["troubleshoot", "checklist", "steps", "methodology"],
+    "answer": "Generic network troubleshooting: (1) Define the problem and scope—one user or many? (2) Check physical/link layer—cables, link lights, Wi-Fi signal. (3) Verify IP config—address, mask, gateway, DNS. (4) Test reachability—ping gateway, then remote target, then traceroute. (5) Test the specific service/port. (6) Review recent changes and logs. (7) Document findings."
+  },
+  {
+    "id": "nat",
+    "topic": "NAT",
+    "keywords": ["nat", "pat", "snat", "dnat", "translation"],
+    "answer": "NAT translates private addresses to public ones for internet access. PAT overloads many internal hosts on one public IP using port mapping. NAT breaks end-to-end connectivity if return paths or port forwards are wrong. For inbound services, configure static DNAT/port forwarding and verify firewall rules allow the translated traffic."
+  },
+  {
+    "id": "default-gateway",
+    "topic": "Default Gateway",
+    "keywords": ["default gateway", "router", "off-subnet", "routing"],
+    "answer": "The default gateway is the router interface used to reach off-subnet destinations. Without it, local LAN traffic may work but internet and remote subnets fail. Confirm the gateway IP is correct, on the same subnet as the host, and that the router interface is up. ARP failures to the gateway indicate L2 or IP mismatch problems."
+  },
+  {
+    "id": "arp",
+    "topic": "ARP",
+    "keywords": ["arp", "mac", "address resolution", "neighbor"],
+    "answer": "ARP maps IP addresses to MAC addresses on a local segment. Stale or duplicate ARP entries cause intermittent reachability. Use arp -a on clients and show arp on switches/routers. Gratuitous ARP conflicts indicate duplicate IPs. Clear ARP cache after IP changes; investigate flapping if MAC moves between ports."
+  },
+  {
+    "id": "mtu",
+    "topic": "MTU and Fragmentation",
+    "keywords": ["mtu", "fragmentation", "mss", "black hole"],
+    "answer": "MTU is the maximum frame/packet size on a link (often 1500 bytes on Ethernet). Mismatched MTU along a path causes fragmentation or silent drops ('PMTUD black holes'). Symptoms: small pings work, large transfers fail. Test with ping -l / ping -M do sized packets and align MTU/MSS on tunnels and VPN interfaces."
+  },
+  {
+    "id": "port-scan",
+    "topic": "Port and Service Checks",
+    "keywords": ["port", "tcp", "service", "telnet", "nc", "curl"],
+    "answer": "Reachability at IP level does not guarantee a service listens on a port. Test TCP with Test-NetConnection, telnet, nc, or curl for HTTP. UDP is harder—use application-specific tools. If the port is closed/filtered, check the server process, local firewall, and network ACLs in order."
+  },
+  {
+    "id": "duplex-mismatch",
+    "topic": "Speed and Duplex Mismatch",
+    "keywords": ["duplex", "half duplex", "full duplex", "autonegotiation", "errors"],
+    "answer": "When one side is full-duplex and the other half-duplex (often from forced speed/duplex vs auto), collisions and CRC errors spike causing slow or lossy links. Match speed/duplex on both ends or use auto on both. Check switch port counters for collisions and interface resets."
+  },
+  {
+    "id": "broadcast-storm",
+    "topic": "Broadcast Storms",
+    "keywords": ["broadcast storm", "loop", "stp", "spanning tree"],
+    "answer": "A switching loop floods broadcast frames until links saturate. STP/RSTP should prevent loops but miswiring or disabled STP can still cause storms. Symptoms: all users on a VLAN slow or down, switch CPU high. Identify the loop port via MAC flapping logs, enable BPDU guard on access ports, and fix redundant links."
+  },
+  {
+    "id": "qos",
+    "topic": "QoS Basics",
+    "keywords": ["qos", "priority", "voice", "video", "queuing"],
+    "answer": "QoS prioritizes critical traffic (VoIP, video) during congestion via classification, marking (DSCP), and queuing. Without QoS, bulk traffic can starve voice. Verify end-to-end trust boundaries, consistent DSCP marking, and queue policies on bottlenecks—usually WAN edge routers."
+  },
+  {
+    "id": "syslog",
+    "topic": "Syslog and Logging",
+    "keywords": ["syslog", "logs", "siem", "events", "debug"],
+    "answer": "Network devices send syslog for link changes, auth failures, and protocol events. Centralize logs on a syslog server or SIEM for correlation. Increase verbosity temporarily for troubleshooting but revert after—verbose debug can fill disks and impact performance. Match timestamps (NTP) across devices for useful timelines."
+  },
+  {
+    "id": "ntp",
+    "topic": "NTP and Time Sync",
+    "keywords": ["ntp", "time", "clock", "sync", "certificate"],
+    "answer": "Accurate time is required for log correlation, certificates, and authentication protocols. If device clocks drift, TLS/VPN may fail and incident timelines become unreliable. Configure NTP servers, verify stratum reachability, and allow UDP 123 through firewalls to trusted time sources."
+  },
+  {
+    "id": "icmp-blocked",
+    "topic": "ICMP Blocked",
+    "keywords": ["icmp", "ping blocked", "firewall", "filter"],
+    "answer": "Many production firewalls block ICMP echo for security, so ping failure does not always mean the host is down. Use TCP-based checks (port 443/22), application health endpoints, or SNMP/device manager status. When interpreting monitor results, distinguish 'host down' from 'ICMP administratively prohibited.'"
+  },
+  {
+    "id": "streamlit-cloud-limits",
+    "topic": "Cloud Deployment Limits",
+    "keywords": ["cloud", "lan", "private network", "agent", "on-prem"],
+    "answer": "Apps hosted on public cloud platforms cannot reach private LAN addresses unless VPN or an on-prem agent forwards metrics. Design monitors for public targets by default and document an adapter for SNMP or internal polling when deployed inside the network or via a local collector script."
+  },
+  {
+    "id": "interface-errors",
+    "topic": "Interface Error Counters",
+    "keywords": ["interface", "errors", "crc", "giants", "runts", "collisions"],
+    "answer": "Interface error counters indicate physical or layer 2 issues. CRC errors mean bad cables or duplex mismatch. Giants/runts suggest frame size problems or faulty NICs. Collisions occur on half-duplex links. Monitor these counters over time—rising trends usually precede outages. Replace cables, force speed/duplex settings, or check for failing hardware."
+  },
+  {
+    "id": "bgp-basics",
+    "topic": "BGP Basics",
+    "keywords": ["bgp", "border gateway protocol", "as", "peering", "routing"],
+    "answer": "BGP is the routing protocol that connects autonomous systems on the internet. It uses path vector algorithms and attributes like AS_PATH, LOCAL_PREF, and MED to select best paths. BGP issues include route flapping, prefix hijacking, and misconfigured filters. Verify BGP sessions are established, check route advertisements, and use route reflectors in large networks."
+  },
+  {
+    "id": "ospf-basics",
+    "topic": "OSPF Basics",
+    "keywords": ["ospf", "open shortest path first", "link state", "area", "lsa"],
+    "answer": "OSPF is a link-state interior routing protocol that uses Dijkstra's algorithm to calculate shortest paths. Networks are divided into areas to reduce LSDB size. OSPF issues include neighbor adjacency failures, area design problems, and LSA flooding storms. Check OSPF neighbor states, verify area IDs, and ensure network types match on both ends."
+  },
+  {
+    "id": "load-balancing",
+    "topic": "Load Balancing",
+    "keywords": ["load balancer", "lb", "nginx", "haproxy", "distribution"],
+    "answer": "Load balancers distribute traffic across multiple servers to improve availability and performance. Algorithms include round-robin, least connections, and IP hash. Health checks remove failed servers from the pool. Issues include uneven distribution, health check misconfiguration, and session persistence problems. Monitor backend health and adjust algorithms based on traffic patterns."
+  },
+  {
+    "id": "ssl-tls",
+    "topic": "SSL/TLS Troubleshooting",
+    "keywords": ["ssl", "tls", "certificate", "https", "encryption"],
+    "answer": "SSL/TLS issues include expired certificates, mismatched hostnames, and protocol version mismatches. Use openssl s_client to test certificate chains and verify expiration. Check that the certificate matches the hostname, intermediate certificates are installed, and supported protocols/ciphers are enabled. Certificate errors can block all HTTPS traffic."
+  },
+  {
+    "id": "network-segmentation",
+    "topic": "Network Segmentation",
+    "keywords": ["segmentation", "security", "zones", "dmz", "isolation"],
+    "answer": "Network segmentation divides networks into security zones to limit breach impact. Use VLANs, subnets, and firewalls to separate departments, guest networks, and DMZs. Implement ACLs between zones following least-privilege principles. Poor segmentation allows lateral movement for attackers. Document zone boundaries and review firewall rules regularly."
+  },
+  {
+    "id": "port-forwarding",
+    "topic": "Port Forwarding and NAT",
+    "keywords": ["port forwarding", "nat", "dnat", "inbound", "external access"],
+    "answer": "Port forwarding (DNAT) maps external ports to internal services behind NAT. Configure on the edge router/firewall with the external port, internal IP, and internal port. Common issues include wrong internal IP, firewall blocking, and ISP CGNAT. Test from outside the network using online port checkers. Document all forwarded ports for security audits."
+  },
+  {
+    "id": "dhcp-relay",
+    "topic": "DHCP Relay",
+    "keywords": ["dhcp relay", "ip helper", "bootp", "forwarding"],
+    "answer": "DHCP relay (IP helper) forwards DHCP broadcasts across subnets to a central server. Configure on router interfaces facing DHCP clients with the server IP. Without relay, clients on remote subnets won't get addresses. Common issues include missing helper addresses, blocked UDP 67/68, and wrong server IP. Verify relay is configured on all VLAN interfaces."
+  },
+  {
+    "id": "mac-flapping",
+    "topic": "MAC Flapping",
+    "keywords": ["mac flapping", "loop", "duplicate", "stp", "switch"],
+    "answer": "MAC flapping occurs when a switch sees the same MAC address on different ports, indicating a loop or duplicate device. This causes intermittent connectivity and high CPU. Causes include spanning tree misconfiguration, physical loops without STP, or VM migration. Identify the flapping MAC, check STP state, and remove physical loops or enable BPDU guard."
+  },
+  {
+    "id": "dns-caching",
+    "topic": "DNS Caching and TTL",
+    "keywords": ["dns cache", "ttl", "propagation", "resolver", "refresh"],
+    "answer": "DNS caching reduces load but can delay updates. TTL (Time To Live) controls how long records are cached. Lower TTL speeds up changes but increases DNS server load. When troubleshooting, flush local DNS cache (ipconfig/flushdns or systemd-resolve). If DNS changes don't propagate, check TTL settings and wait for cache expiration."
+  },
+  {
+    "id": "ipv6-basics",
+    "topic": "IPv6 Basics",
+    "keywords": ["ipv6", "128-bit", "slaac", "dual stack", "transition"],
+    "answer": "IPv6 provides larger address space and eliminates NAT. Uses 128-bit addresses with hex notation. SLAAC allows autoconfiguration without DHCP. Transition mechanisms include dual-stack and tunneling. IPv6 issues include misconfigured firewalls, lack of IPv6 skills, and incomplete ISP support. Test IPv6 connectivity with test-ipv6.com and ensure security policies cover IPv6."
+  }
+]
